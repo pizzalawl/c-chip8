@@ -12,8 +12,7 @@ typedef struct{
     bool screen[64][32];
 } Chip8;
 
-int loadFile(Chip8 *pc, char file[], int START_ADDRESS){
-    FILE *rom = fopen(rom, "rb");
+int loadFile(Chip8 *pc, FILE *rom, int START_ADDRESS){
     fseek(rom, 0L, SEEK_END);
     int size = ftell(rom);
     rewind(rom);
@@ -23,11 +22,6 @@ int loadFile(Chip8 *pc, char file[], int START_ADDRESS){
     for(int i = 0; i < sizeof(buffer); i++){
         pc->memory[START_ADDRESS + i] = buffer[i];
     }
-    
-    for(int i = 0; i < 144; i++){
-        printf("%x, ", pc->memory[START_ADDRESS + i]);
-    }
-
 
     fclose(rom);
     return 0;
@@ -35,7 +29,9 @@ int loadFile(Chip8 *pc, char file[], int START_ADDRESS){
 
 int main(void) {
     Chip8 emulator;
-    loadFile(&emulator, "zero.ch8", 0x200);
+
+    FILE *rom = fopen("zero.ch8", "rb");
+    loadFile(&emulator, rom, 0x200);
 
     return 0;
 }

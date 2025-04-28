@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdint.h>
 #include <stdlib.h>
 #include <time.h>
 #include "emulator.h"
@@ -12,6 +14,9 @@ int main(void) {
     FILE *font = fopen("font.bin", "rb");
     loadFile(&emulator, rom, 0x200);
     loadFile(&emulator, font, 0x50);
+
+    //debug memory
+    printMemory(emulator);
 
     return 0;
 }

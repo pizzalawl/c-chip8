@@ -1,17 +1,8 @@
 #include "instructions.h"
+#include "emulator.h"
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
-
-typedef struct{
-    uint8_t memory[4096];
-    uint16_t counter;
-    uint16_t index;
-    uint8_t timer;
-    uint8_t sound_timer;
-    uint8_t registers[15];
-    bool screen[64][32];
-} Chip8;
 
 //file that loads a binary file into emulator memory
 int loadFile(Chip8 *pc, FILE *file, int START_ADDRESS){
@@ -27,4 +18,10 @@ int loadFile(Chip8 *pc, FILE *file, int START_ADDRESS){
 
     fclose(file);
     return 0;
+}
+
+void printMemory(Chip8 emulator){
+    for(int i = 0; i < sizeof(emulator.memory); i++){
+        printf("%x: %i\n", i, emulator.memory[i]);
+    }
 }

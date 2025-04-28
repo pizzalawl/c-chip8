@@ -1,6 +1,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 typedef struct{
     uint8_t memory[4096];
@@ -12,26 +14,32 @@ typedef struct{
     bool screen[64][32];
 } Chip8;
 
-int loadFile(Chip8 *pc, FILE *rom, int START_ADDRESS){
-    fseek(rom, 0L, SEEK_END);
-    int size = ftell(rom);
-    rewind(rom);
+//file that loads a binary file into emulator memory
+int loadFile(Chip8 *pc, FILE *file, int START_ADDRESS){
+    fseek(file, 0L, SEEK_END);
+    int size = ftell(file);
+    rewind(file);
     uint8_t buffer[size];
 
-    fread(buffer, sizeof(uint8_t), size, rom);
+    fread(buffer, sizeof(uint8_t), size, file);
     for(int i = 0; i < sizeof(buffer); i++){
         pc->memory[START_ADDRESS + i] = buffer[i];
     }
 
-    fclose(rom);
+    fclose(file);
     return 0;
 }
 
 int main(void) {
+    //initialize emulator and random number generator
     Chip8 emulator;
+    srand(time(NULL));
 
+    // load rom and standard font into memory
     FILE *rom = fopen("zero.ch8", "rb");
+    FILE *font = fopen("font.bin", "rb");
     loadFile(&emulator, rom, 0x200);
+    loadFile(&emulator, font, 0x50);
 
     return 0;
 }

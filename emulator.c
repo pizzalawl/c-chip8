@@ -9,7 +9,7 @@ int loadFile(Chip8 *pc, FILE *file, int START_ADDRESS){
     fseek(file, 0L, SEEK_END);
     int size = ftell(file);
     rewind(file);
-    uint8_t buffer[size];
+    uint8_t buffer[4096];
 
     fread(buffer, sizeof(uint8_t), size, file);
     for(int i = 0; i < sizeof(buffer); i++){

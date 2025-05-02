@@ -5,8 +5,9 @@
 #include "emulator.h"
 
 int main(void) {
-    //initialize emulator and random number generator
+    //initialize emulator, stack pointer, and random number generator
     Chip8 emulator;
+    emulator.sp = 0;
     srand(time(NULL));
 
     // load rom and standard font into memory

@@ -208,30 +208,128 @@ void OP_DRW(Chip8 *emulator, uint16_t opcode){
 }
 
 void OP_SKP(Chip8 *emulator, uint16_t opcode){
+    uint8_t reg = (opcode & 0x0F00) >> 8;
+    uint8_t key = emulator->registers[reg];
 
+    if(emulator->keypad[key]){
+        emulator->counter += 2;
+    }
 }
 
 void OP_SKNP(Chip8 *emulator, uint16_t opcode){
+    uint8_t reg = (opcode & 0x0F00) >> 8;
+    uint8_t key = emulator->registers[reg];
 
+    if(!emulator->keypad[key]){
+        emulator->counter += 2;
+    }
 }
 
 void OP_LD_DT_REG(Chip8 *emulator, uint16_t opcode){
+    uint8_t reg = (opcode & 0x0F00) >> 8;
 
+    emulator->registers[reg] = emulator->timer;
 }
 
 void OP_LD_KEY(Chip8 *emulator, uint16_t opcode){
-    
+    uint8_t reg = (opcode & 0x0F00) >> 8;
+
+    if(emulator->keypad[0]){
+        emulator->registers[reg] = 1;
+    }
+    else if(emulator->keypad[1]){
+        emulator->registers[reg] = 2;
+    }
+    else if(emulator->keypad[2]){
+        emulator->registers[reg] = 3;
+    }
+    else if(emulator->keypad[3]){
+        emulator->registers[reg] = 4;
+    }
+    else if(emulator->keypad[4]){
+        emulator->registers[reg] = 5;
+    }
+    else if(emulator->keypad[5]){
+        emulator->registers[reg] = 6;
+    }
+    else if(emulator->keypad[6]){
+        emulator->registers[reg] = 7;
+    }
+    else if(emulator->keypad[7]){
+        emulator->registers[reg] = 8;
+    }
+    else if(emulator->keypad[8]){
+        emulator->registers[reg] = 9;
+    }
+    else if(emulator->keypad[9]){
+        emulator->registers[reg] = 10;
+    }
+    else if(emulator->keypad[10]){
+        emulator->registers[reg] = 11;
+    }
+    else if(emulator->keypad[11]){
+        emulator->registers[reg] = 12;
+    }
+    else if(emulator->keypad[12]){
+        emulator->registers[reg] = 13;
+    }
+    else if(emulator->keypad[13]){
+        emulator->registers[reg] = 14;
+    }
+    else if(emulator->keypad[14]){
+        emulator->registers[reg] = 15;
+    }
+    else if(emulator->keypad[15]){
+        emulator->registers[reg] = 16;
+    }
+    else{
+        emulator->counter -= 2;
+    }
 }
 
 void OP_LD_REG_DT(Chip8 *emulator, uint16_t opcode){
+    uint8_t reg = (opcode & 0x0F00) >> 8;
 
+    emulator->timer = emulator->registers[reg];
 }
 
 void OP_LD_REG_ST(Chip8 *emulator, uint16_t opcode){
+    uint8_t reg = (opcode & 0x0F00) >> 8;
 
+    emulator->sound_timer = emulator->registers[reg];
 }
 
 void OP_ADD_I(Chip8 *emulator, uint16_t opcode){
+    uint8_t reg = (opcode & 0x0F00) >> 8;
 
+    emulator->index += emulator->registers[reg];
+}
+
+void OP_LD_DIG(Chip8 *emulator, uint16_t opcode){
+    uint8_t reg = (opcode & 0x0F00) >> 8;
+    uint8_t digit = emulator->registers[reg];
+
+    emulator->index = 0x50 + (5 * digit);
+}
+
+void OP_LD_BCD(Chip8 *emulator, uint16_t opcode){
+    uint8_t reg = (opcode & 0x0F00) >> 8;
+    
+}
+
+void OP_LD_ARR_STORE(Chip8 *emulator, uint16_t opcode){
+    uint8_t reg = (opcode & 0x0F00) >> 8;
+
+    for(int i = 0; i <= reg; i++){
+        emulator->memory[emulator->index + i] = emulator->registers[i];
+    }
+}
+
+void OP_LD_ARR_READ(Chip8 *emulator, uint16_t opcode){
+    uint8_t reg = (opcode & 0x0F00) >> 8;
+
+    for(int i = 0; i <= reg; i++){
+        emulator->registers[i] = emulator->memory[emulator->index + i];
+    }
 }
 

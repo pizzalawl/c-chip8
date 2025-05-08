@@ -16,8 +16,24 @@ int main(void) {
     loadFile(&emulator, rom, 0x200);
     loadFile(&emulator, font, 0x50);
 
-    //debug memory
-    printMemory(emulator);
+    //Fetch, Debug, Execute
+    while(true){
+        //get opcode
+        uint8_t opcode = emulator.memory[emulator.counter];
+
+        //add to counter
+        emulator.counter += 2;
+
+        //decode instruction
+        
+        //decrement timers
+        if(emulator.timer > 0){
+            emulator.timer--
+        }
+        if(emulator.sound_timer > 0){
+            emulator.sound_timer--
+        }
+    }
 
     return 0;
 }

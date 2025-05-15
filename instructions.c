@@ -1,6 +1,7 @@
-#include <stdint.h>
 #include <stdio.h>
-#include <stdbool.h>
+#include <stdint.h>
+#include <stdlib.h>
+#include <time.h>
 #include "emulator.h"
 
 
@@ -228,39 +229,7 @@ void OP_RAND(Chip8 *emulator, uint16_t opcode){
 
 //Dxyn - DRW Vx, Vy, nibble
 void OP_DRW(Chip8 *emulator, uint16_t opcode){
-    uint8_t Vx = (opcode & 0x0F00u) >> 8u;
-	uint8_t Vy = (opcode & 0x00F0u) >> 4u;
-	uint8_t height = opcode & 0x000Fu;
 
-	// Wrap if going beyond screen boundaries
-	uint8_t xPos = emulator->registers[Vx] % 64;
-	uint8_t yPos = emulator->registers[Vy] % 32;
-
-	emulator->registers[0xF] = 0;
-
-	for (unsigned int row = 0; row < height; ++row)
-	{
-		uint8_t spriteByte = emulator->memory[emulator->index + row];
-
-		for (unsigned int col = 0; col < 8; ++col)
-		{
-			uint8_t spritePixel = spriteByte & (0x80u >> col);
-			uint32_t* screenPixel = &emulator->screen[(yPos + row) * 64 + (xPos + col)];
-
-			// Sprite pixel is on
-			if (spritePixel)
-			{
-				// Screen pixel also on - collision
-				if (*screenPixel == 0xFFFFFFFF)
-				{
-					emulator->registers[0xF] = 1;
-				}
-
-				// Effectively XOR with the sprite pixel
-				*screenPixel ^= 0xFFFFFFFF;
-			}
-		}
-	}
 }
 
 //Ex9E - SKP Vx
@@ -411,4 +380,3 @@ void OP_LD_ARR_READ(Chip8 *emulator, uint16_t opcode){
         emulator->registers[i] = emulator->memory[emulator->index + i];
     }
 }
-

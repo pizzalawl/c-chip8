@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <stdbool.h>
+#include "emulator.h"
 
 // Opcode function declarations
 void OP_CLS(Chip8 *emulator, uint16_t opcode);               // 00E0 - Clear the display

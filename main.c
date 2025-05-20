@@ -4,17 +4,64 @@
 #include <time.h>
 #include "emulator.h"
 #include "instructions.h"
+#include "SDL3/SDL.h"
+#include "SDL3/SDL_render.h"
+
+// Define constants for display
+#define WINDOW_WIDTH 640
+#define WINDOW_HEIGHT 320
+#define PIXEL_SIZE 10
 
 void OP_Table0(Chip8 *emulator, uint16_t opcode);
 void OP_Table8(Chip8 *emulator, uint16_t opcode);
 void OP_TableE(Chip8 *emulator, uint16_t opcode);
 void OP_TableF(Chip8 *emulator, uint16_t opcode);
 
+void updateDisplay(Chip8 *emulator, SDL_Renderer *renderer){
+    // Clear screen
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+
+    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+    for(int x = 0; x < 64; x++){
+        for(int y = 0; y < 32; y++){
+            if(emulator->screen[x][y]){
+            SDL_FRect rect = {x * PIXEL_SIZE, y * PIXEL_SIZE, PIXEL_SIZE, PIXEL_SIZE};
+            SDL_RenderFillRect(renderer, &rect);
+            }
+        }
+    }
+}
+
 int main(void) {
     //initialize emulator, stack pointer, and random number generator
     Chip8 emulator;
     emulator.sp = 0;
     srand(time(NULL));
+
+    /* Initialize defaults, Video and Audio */
+    if((SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO)==-1)) { 
+        printf("Could not initialize SDL: %s.\n", SDL_GetError());
+        exit(-1);
+    }
+
+    printf("SDL initialized.\n");
+
+    // Create window and renderer
+    SDL_Window *window = SDL_CreateWindow("Chip-8 Emulator", WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+    if (!window) {
+        printf("Could not create window: %s.\n", SDL_GetError());
+        SDL_Quit();
+        exit(-1);
+    }
+
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, "Chip8");
+    if (!renderer) {
+        printf("Could not create renderer: %s.\n", SDL_GetError());
+        SDL_DestroyWindow(window);
+        SDL_Quit();
+        exit(-1);
+    }
 
     //initialize function table
     void (*table[16])(Chip8*, uint16_t);
@@ -60,7 +107,14 @@ int main(void) {
         if(emulator.sound_timer > 0){
             emulator.sound_timer--;
         }
+
+        //update display
+        updateDisplay(&emulator, renderer);
     }
+
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
 
     return 0;
 }

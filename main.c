@@ -34,6 +34,9 @@ void updateDisplay(Chip8 *emulator, SDL_Renderer *renderer){
 }
 
 int main(void) {
+    //test print
+    printf("Main Function Started");
+
     //initialize emulator, stack pointer, and random number generator
     Chip8 emulator;
     emulator.sp = 0;

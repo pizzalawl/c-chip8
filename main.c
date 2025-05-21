@@ -6,6 +6,7 @@
 #include "instructions.h"
 #include "SDL3/SDL.h"
 #include "SDL3/SDL_render.h"
+#include "SDL3/SDL_main.h"
 
 // Define constants for display
 #define WINDOW_WIDTH 640
@@ -33,9 +34,9 @@ void updateDisplay(Chip8 *emulator, SDL_Renderer *renderer){
     }
 }
 
-int main(void) {
+int main(int argc, char* argv[]) {
     //test print
-    printf("Main Function Started");
+    printf("Main Function Started\n");
 
     //initialize emulator, stack pointer, and random number generator
     Chip8 emulator;

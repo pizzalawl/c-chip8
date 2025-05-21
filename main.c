@@ -55,7 +55,7 @@ int main(void) {
         exit(-1);
     }
 
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, "Chip8");
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, "chip8");
     if (!renderer) {
         printf("Could not create renderer: %s.\n", SDL_GetError());
         SDL_DestroyWindow(window);

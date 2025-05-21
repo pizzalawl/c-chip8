@@ -1,0 +1,1 @@
+gcc emulator.c instructions.c main.c -o chip8.exe -L ./lib -I ./include -lSDL3 -Wall -Wextra

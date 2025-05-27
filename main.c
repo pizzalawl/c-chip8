@@ -41,6 +41,7 @@ int main(int argc, char* argv[]) {
     //initialize emulator, stack pointer, and random number generator
     Chip8 emulator;
     emulator.sp = 0;
+    emulator.counter = 0x200;
     srand(time(NULL));
 
 
@@ -88,14 +89,11 @@ int main(int argc, char* argv[]) {
     table[0xE] = &OP_TableE;
     table[0xF] = &OP_TableF;
 
-    printf("%i\n", emulator.memory[emulator.counter]);
     // load rom and standard font into memory
     FILE *rom = fopen("zero.ch8", "rb");
     FILE *font = fopen("font.bin", "rb");
-    printf("%i\n", emulator.memory[emulator.counter]);
     loadFile(&emulator, rom, 0x200);
     loadFile(&emulator, font, 0x50);
-    printf("%i\n", emulator.memory[emulator.counter]);
 
     bool done = false;
 

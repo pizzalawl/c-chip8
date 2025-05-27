@@ -43,6 +43,7 @@ int main(int argc, char* argv[]) {
     emulator.sp = 0;
     srand(time(NULL));
 
+
     /* Initialize defaults, Video and Audio */
     if((SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO)==-1)) { 
         printf("Could not initialize SDL: %s.\n", SDL_GetError());
@@ -59,7 +60,7 @@ int main(int argc, char* argv[]) {
         exit(-1);
     }
 
-    SDL_Renderer *renderer = SDL_CreateRenderer(window, "chip8");
+    SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
     if (!renderer) {
         printf("Could not create renderer: %s.\n", SDL_GetError());
         SDL_DestroyWindow(window);
@@ -87,23 +88,33 @@ int main(int argc, char* argv[]) {
     table[0xE] = &OP_TableE;
     table[0xF] = &OP_TableF;
 
+    printf("%i\n", emulator.memory[emulator.counter]);
     // load rom and standard font into memory
     FILE *rom = fopen("zero.ch8", "rb");
     FILE *font = fopen("font.bin", "rb");
+    printf("%i\n", emulator.memory[emulator.counter]);
     loadFile(&emulator, rom, 0x200);
     loadFile(&emulator, font, 0x50);
+    printf("%i\n", emulator.memory[emulator.counter]);
 
+    bool done = false;
+
+    printf("starting loop\n");
     //Fetch, Debug, Execute
-    while(true){
+    while(!done){
+        printf("loop\n");
         //get opcode
         uint16_t opcode = emulator.memory[emulator.counter];
 
+        printf("adding to counter\n");
         //add to counter
         emulator.counter += 2;
 
+        printf("instruction decoding\n");
         //decode instruction
         table[opcode >> 12](&emulator, opcode);
 
+        printf("instruction decoded\n");
         //decrement timers
         if(emulator.timer > 0){
             emulator.timer--;
@@ -111,9 +122,10 @@ int main(int argc, char* argv[]) {
         if(emulator.sound_timer > 0){
             emulator.sound_timer--;
         }
-
+        printf("updating display\n");
         //update display
         updateDisplay(&emulator, renderer);
+        printf("display updated\n");
     }
 
     SDL_DestroyRenderer(renderer);

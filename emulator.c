@@ -12,7 +12,7 @@ int loadFile(Chip8 *pc, FILE *file, int START_ADDRESS){
     uint8_t buffer[4096];
 
     fread(buffer, sizeof(uint8_t), size, file);
-    for(int i = 0; i < sizeof(buffer); i++){
+    for(size_t i = 0; i < sizeof(buffer); i++){
         pc->memory[START_ADDRESS + i] = buffer[i];
     }
 
@@ -21,7 +21,7 @@ int loadFile(Chip8 *pc, FILE *file, int START_ADDRESS){
 }
 
 void printMemory(Chip8 emulator){
-    for(int i = 0; i < sizeof(emulator.memory); i++){
-        printf("%x: %i\n", i, emulator.memory[i]);
+    for(size_t i = 0; i < sizeof(emulator.memory); i++){
+        printf("%llx: %i\n", i, emulator.memory[i]);
     }
 }
